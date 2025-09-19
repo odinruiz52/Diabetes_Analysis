@@ -70,3 +70,27 @@ Diabetes affects millions globally and early detection can prevent serious compl
 **Key Limitations**: The model misses 87% of actual diabetes cases due to conservative thresholds, which could delay treatment for many patients. The data comes from 2015 surveys where people self-reported their health status, potentially introducing bias. Survey respondents may also not represent the broader population accurately.
 
 **Next Steps**: Adjust the prediction threshold to catch more diabetes cases, even if it means more false alarms. Test the model separately for different age groups and genders to ensure fair performance across populations. Consider adding more recent data or lab test results to improve accuracy.
+
+## How to Run
+
+Follow these steps to reproduce the project results:
+
+1. **Make sure you have Python 3.8 or higher** installed.
+2. **Install the required packages:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **From the project root, run the training pipeline:**
+   ```bash
+   python src/train.py
+   ```
+
+**Expected Results:**
+- The script will finish in about 2–3 minutes
+- Results will be saved automatically:
+  - Trained model in `models/`
+  - Performance metrics in `results/model_metrics.csv`
+  - Feature importance in `results/feature_importance.csv`
+  - Plots in `results/plots/`
+
+This single command handles data preparation, training, and results generation.
