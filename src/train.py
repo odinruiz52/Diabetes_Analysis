@@ -257,6 +257,9 @@ def main():
     # Analyze different thresholds
     threshold_df = analyze_thresholds(y_test, metrics['predictions']['y_pred_proba'])
 
+    # Run calibration check
+    calibration_check(y_test, metrics['predictions']['y_pred_proba'])
+
     # Create visualizations
     create_visualizations(metrics)
     
@@ -272,6 +275,8 @@ def main():
     print("  - Performance metrics: results/model_metrics.csv")
     print("  - Feature importance: results/feature_importance.csv")
     print("  - Threshold analysis: results/threshold_analysis.csv")
+    print("  - Calibration results: results/calibration_results.csv")
+    print("  - Calibration plot: results/plots/calibration_curve.png")
 
 if __name__ == "__main__":
     main()
