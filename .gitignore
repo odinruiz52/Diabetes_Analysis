@@ -1,0 +1,15 @@
+# Claude Code settings (EXCLUDE FROM REPOSITORY)
+.claude/
+
+# virtual envs
+.venv/
+# python cache
+__pycache__/
+*.pyc
+# raw data
+data/raw/
+# large/binary
+*.joblib
+# OS/editor
+.DS_Store
+.vscode/
