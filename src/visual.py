@@ -350,11 +350,12 @@ class DiabetesVisualizationSuite:
         fpr, tpr, _ = roc_curve(self.metrics['predictions']['y_test'],
                                self.metrics['predictions']['y_pred_proba'])
 
-        plt.plot(fpr, tpr, linewidth=3, label=f'ROC Curve (AUC = {self.metrics["roc_auc"]:.3f})')
-        plt.plot([0, 1], [0, 1], 'k--', alpha=0.5, linewidth=2, label='Random Classifier')
-        plt.xlabel('False Positive Rate', fontsize=12)
-        plt.ylabel('True Positive Rate', fontsize=12)
-        plt.title('ROC Curve - Diabetes Prediction Model', fontsize=14, fontweight='bold')
+        plt.plot(fpr, tpr, linewidth=3, label=f'Model Performance (AUC = {self.metrics["roc_auc"]:.3f})')
+        plt.plot([0, 1], [0, 1], 'k--', alpha=0.5, linewidth=2, label='Random Guessing')
+        plt.xlabel('False Positive Rate (Healthy Patients Incorrectly Flagged)', fontsize=11)
+        plt.ylabel('True Positive Rate (Diabetic Patients Correctly Identified)', fontsize=11)
+        plt.title('Model Ability to Separate Healthy vs. Diabetic Patients', fontsize=14, fontweight='bold')
+        plt.suptitle(f'AUC = {self.metrics["roc_auc"]:.3f} (Higher is Better, Max = 1.0)', fontsize=12, y=0.02)
         plt.legend(fontsize=11)
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
@@ -382,12 +383,17 @@ class DiabetesVisualizationSuite:
         cm = confusion_matrix(self.metrics['predictions']['y_test'],
                              self.metrics['predictions']['y_pred'])
 
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar_kws={'label': 'Count'},
-                   xticklabels=['No Diabetes', 'Has Diabetes'],
-                   yticklabels=['No Diabetes', 'Has Diabetes'])
-        plt.title('Confusion Matrix', fontsize=14, fontweight='bold')
-        plt.ylabel('Actual', fontsize=12)
-        plt.xlabel('Predicted', fontsize=12)
+        # Calculate percentages for annotations
+        cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+        annot_text = [[f'{cm[i,j]:,}\n({cm_percent[i,j]:.1f}%)' for j in range(cm.shape[1])] for i in range(cm.shape[0])]
+
+        sns.heatmap(cm, annot=annot_text, fmt='', cmap='Blues', cbar_kws={'label': 'Patient Count'},
+                   xticklabels=['Predicted: No Diabetes', 'Predicted: Has Diabetes'],
+                   yticklabels=['Actually: No Diabetes', 'Actually: Has Diabetes'])
+        plt.title('Correct Predictions vs. Mistakes', fontsize=14, fontweight='bold')
+        plt.suptitle('Green diagonal = Correct predictions, Off-diagonal = Errors', fontsize=11, y=0.02)
+        plt.ylabel('What Patients Actually Have', fontsize=12)
+        plt.xlabel('What Model Predicted', fontsize=12)
         plt.tight_layout()
         plt.savefig(f'{self.plots_dir}/confusion_matrix.png', dpi=300, bbox_inches='tight')
         # plt.show()  # Disabled for non-interactive mode
@@ -395,19 +401,38 @@ class DiabetesVisualizationSuite:
         # 4. Feature Importance
         plt.figure(figsize=(12, 8))
         top_features = self.metrics['feature_importance'].head(10)
+
+        # Create more descriptive feature names
+        feature_names_mapping = {
+            'GenHlth': 'General Health Status',
+            'HighBP': 'High Blood Pressure',
+            'BMI': 'Body Mass Index (BMI)',
+            'HighChol': 'High Cholesterol',
+            'Age': 'Age Group',
+            'PhysHlth': 'Physical Health Days',
+            'Income': 'Income Level',
+            'MentHlth': 'Mental Health Days',
+            'PhysActivity': 'Physical Activity',
+            'Sex': 'Gender',
+            'Veggies': 'Vegetable Consumption',
+            'Fruits': 'Fruit Consumption'
+        }
+
+        readable_features = [feature_names_mapping.get(feat, feat) for feat in top_features['feature']]
         colors = plt.cm.viridis(np.linspace(0, 1, len(top_features)))
 
         bars = plt.barh(range(len(top_features)), top_features['importance'], color=colors)
-        plt.yticks(range(len(top_features)), top_features['feature'])
-        plt.xlabel('Importance Score', fontsize=12)
-        plt.title('Top 10 Feature Importance - Diabetes Prediction', fontsize=14, fontweight='bold')
+        plt.yticks(range(len(top_features)), readable_features)
+        plt.xlabel('Importance Score (Higher = More Influential)', fontsize=12)
+        plt.title('Top Drivers of Diabetes Risk in This Dataset', fontsize=14, fontweight='bold')
+        plt.suptitle('Features ranked by how much they influence model predictions', fontsize=11, y=0.02)
         plt.gca().invert_yaxis()
 
         # Add value labels
         for i, bar in enumerate(bars):
             width = bar.get_width()
-            plt.text(width + 0.001, bar.get_y() + bar.get_height()/2,
-                    f'{width:.3f}', ha='left', va='center')
+            plt.text(width + 0.005, bar.get_y() + bar.get_height()/2,
+                    f'{width:.3f}', ha='left', va='center', fontweight='bold')
 
         plt.tight_layout()
         plt.savefig(f'{self.plots_dir}/feature_importance.png', dpi=300, bbox_inches='tight')
@@ -438,6 +463,13 @@ class DiabetesVisualizationSuite:
         # plt.show()  # Disabled for non-interactive mode
 
         print("All model performance visualizations created and saved!")
+        print("\n" + "=" * 50)
+        print("VISUALIZATION SUMMARY FOR RECRUITERS")
+        print("=" * 50)
+        print("* ROC Curve shows how well the model separates patients with vs. without diabetes")
+        print("* Confusion Matrix highlights correct predictions vs. mistakes")
+        print("* Feature Importance shows which health factors drive the model most")
+        print("All plots saved with business-friendly labels and context!")
 
     def create_all_visualizations(self):
         """Create complete visualization suite"""

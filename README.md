@@ -126,6 +126,22 @@ Diabetes_Analysis/
 └── LICENSE                 # MIT license
 ```
 
+## Visualizations
+
+The project generates clear, recruiter-friendly visual outputs:
+
+- **ROC Curve (`results/plots/roc_curve.png`)**
+  Shows how well the model separates patients with vs. without diabetes.
+  A higher AUC means better discrimination between healthy and at-risk patients.
+
+- **Confusion Matrix (`results/plots/confusion_matrix.png`)**
+  Breaks down correct predictions vs. mistakes.
+  Helps visualize the trade-off between catching more diabetes cases vs. avoiding false alarms.
+
+- **Feature Importance (`results/plots/feature_importance.png`)**
+  Highlights the top drivers of diabetes predictions in this dataset.
+  For example: general health, high blood pressure, and BMI rank among the strongest predictors.
+
 ## Technical Details
 
 - **Model**: Random Forest Classifier
