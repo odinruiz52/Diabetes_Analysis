@@ -94,3 +94,39 @@ Follow these steps to reproduce the project results:
   - Plots in `results/plots/`
 
 This single command handles data preparation, training, and results generation.
+
+## Repository Structure
+
+```
+Diabetes_Analysis/
+├── src/                     # Source code for data prep, training, and visuals
+│   ├── train.py            # Main training pipeline (one-command execution)
+│   ├── visual.py           # Visualization functions (ROC, confusion matrix, etc.)
+│   ├── data_preprocessing.py # Data cleaning and feature prep
+│   ├── load_data.py        # Data loading utilities
+│   └── eda.py              # Exploratory data analysis
+├── data/                   # Dataset (CSV format, 253k records)
+├── results/                # Model outputs, metrics, plots
+├── models/                 # Saved trained model
+├── notebooks/              # Jupyter notebooks for EDA and analysis
+├── tests/                  # Test files for pipeline validation
+├── requirements.txt        # Python dependencies
+├── README.md               # Project documentation
+└── LICENSE                 # MIT license
+```
+
+## Technical Details
+
+- **Model**: Random Forest Classifier
+- **Libraries**: pandas, scikit-learn, matplotlib, seaborn
+- **Validation**: Train/test split with cross-validation
+- **Dataset Size**: 253,680 records, 22 features
+- **Runtime**: ~2–3 minutes on standard CPU
+
+## Author & License
+
+Created by **Victor Ruiz**
+Email: odinruiz52@yahoo.com
+GitHub: [odinruiz52](https://github.com/odinruiz52)
+
+Licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
