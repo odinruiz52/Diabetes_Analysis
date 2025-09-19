@@ -109,6 +109,52 @@ def evaluate_model(model, X_test, y_test, feature_names):
     
     return metrics
 
+def analyze_thresholds(y_test, y_pred_proba):
+    """Analyze model performance at different thresholds"""
+    print("Analyzing threshold trade-offs...")
+
+    # Test different thresholds
+    thresholds = [0.3, 0.5, 0.6]
+    threshold_results = []
+
+    for threshold in thresholds:
+        # Make predictions at this threshold
+        y_pred_threshold = (y_pred_proba >= threshold).astype(int)
+
+        # Calculate confusion matrix
+        tn, fp, fn, tp = confusion_matrix(y_test, y_pred_threshold).ravel()
+
+        # Calculate metrics
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
+        f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+
+        threshold_results.append({
+            'Threshold': threshold,
+            'Precision': round(precision, 3),
+            'Recall': round(recall, 3),
+            'Specificity': round(specificity, 3),
+            'F1_Score': round(f1_score, 3)
+        })
+
+        print(f"  Threshold {threshold}: Precision={precision:.3f}, Recall={recall:.3f}, Specificity={specificity:.3f}")
+
+    # Create DataFrame and save results
+    threshold_df = pd.DataFrame(threshold_results)
+
+    # Ensure results directory exists
+    os.makedirs('results', exist_ok=True)
+    threshold_df.to_csv('results/threshold_analysis.csv', index=False)
+
+    print("Threshold analysis complete!")
+    print("Key Trade-offs:")
+    print("  Lower thresholds catch more diabetes cases but increase false alarms")
+    print("  Higher thresholds reduce false alarms but miss more cases")
+    print("Threshold analysis saved: results/threshold_analysis.csv")
+
+    return threshold_df
+
 def create_visualizations(metrics):
     """Create and save key visualizations using visual.py"""
     print("Creating visualizations using visual.py...")
@@ -170,7 +216,10 @@ def main():
     
     # Evaluate model
     metrics = evaluate_model(model, X_test, y_test, feature_names)
-    
+
+    # Analyze different thresholds
+    threshold_df = analyze_thresholds(y_test, metrics['predictions']['y_pred_proba'])
+
     # Create visualizations
     create_visualizations(metrics)
     
@@ -185,6 +234,7 @@ def main():
     print("  - Trained model: models/diabetes_model.joblib")
     print("  - Performance metrics: results/model_metrics.csv")
     print("  - Feature importance: results/feature_importance.csv")
+    print("  - Threshold analysis: results/threshold_analysis.csv")
 
 if __name__ == "__main__":
     main()
