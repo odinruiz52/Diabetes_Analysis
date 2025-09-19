@@ -155,6 +155,43 @@ def analyze_thresholds(y_test, y_pred_proba):
 
     return threshold_df
 
+def calibration_check(y_test, y_pred_proba):
+    """Check model calibration with a reliability diagram"""
+    print("Running calibration check...")
+
+    from sklearn.calibration import calibration_curve
+    import matplotlib.pyplot as plt
+
+    # Calculate calibration curve (10 bins)
+    prob_true, prob_pred = calibration_curve(y_test, y_pred_proba, n_bins=10)
+
+    # Save calibration results as CSV
+    calib_df = pd.DataFrame({
+        'Predicted_Prob': prob_pred,
+        'True_Prob': prob_true
+    })
+    os.makedirs('results', exist_ok=True)
+    calib_df.to_csv('results/calibration_results.csv', index=False)
+
+    # Plot reliability diagram
+    plt.figure(figsize=(6,6))
+    plt.plot(prob_pred, prob_true, marker='o', label='Model Calibration')
+    plt.plot([0,1], [0,1], linestyle='--', color='gray', label='Perfectly Calibrated')
+    plt.xlabel('Predicted Probability')
+    plt.ylabel('True Probability')
+    plt.title('Calibration Curve (Reliability Diagram)')
+    plt.legend()
+    os.makedirs('results/plots', exist_ok=True)
+    plt.savefig('results/plots/calibration_curve.png')
+    plt.close()
+
+    # Print plain-English interpretation
+    print("Calibration analysis complete!")
+    print("Key Insight: If points are close to the diagonal, predictions are well-calibrated.")
+    print("Results saved: results/calibration_results.csv and results/plots/calibration_curve.png")
+
+    return calib_df
+
 def create_visualizations(metrics):
     """Create and save key visualizations using visual.py"""
     print("Creating visualizations using visual.py...")
