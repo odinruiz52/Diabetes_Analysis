@@ -113,7 +113,7 @@ Diabetes_Analysis/
 ├── src/                     # Source code for data prep, training, and visuals
 │   ├── train.py            # Main training pipeline (one-command execution)
 │   ├── visual.py           # Visualization functions (ROC, confusion matrix, etc.)
-│   ├── data_preprocessing.py # Data cleaning and feature prep
+│   ├── data_preprocessing.py # Clean and prepare raw data (refactored for clarity)
 │   ├── load_data.py        # Data loading utilities
 │   └── eda.py              # Exploratory data analysis
 ├── data/                   # Dataset (CSV format, 253k records)
