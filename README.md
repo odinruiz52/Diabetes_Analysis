@@ -56,3 +56,17 @@ Diabetes affects millions globally and early detection can prevent serious compl
 | **F1-Score** | 0.219 |
 
 **What This Means**: The model is excellent at correctly identifying healthy patients (98% specificity) but conservative in flagging diabetes cases, catching only 13% of actual diabetes patients. This creates a very reliable screening tool that minimizes false alarms but may miss some at-risk individuals. For healthcare screening, this trade-off reduces unnecessary follow-ups while maintaining high confidence in positive predictions.
+
+## Key Findings
+
+**Top Risk Factors**: General health status, high blood pressure, and BMI emerged as the strongest predictors of diabetes risk, accounting for over 50% of the model's decision-making power. Age and high cholesterol were also important but secondary factors.
+
+**Model Strength**: The 98% specificity means the model rarely flags healthy people as diabetic, making it excellent for reducing false alarms in screening programs. When the model says someone is at risk, there's a 61% chance they actually have diabetes.
+
+**Population Insights**: The data revealed clear patterns linking lifestyle factors (physical activity, diet) and socioeconomic status (income level) to diabetes outcomes, confirming that diabetes risk extends beyond just medical factors.
+
+## Limitations & Next Steps
+
+**Key Limitations**: The model misses 87% of actual diabetes cases due to conservative thresholds, which could delay treatment for many patients. The data comes from 2015 surveys where people self-reported their health status, potentially introducing bias. Survey respondents may also not represent the broader population accurately.
+
+**Next Steps**: Adjust the prediction threshold to catch more diabetes cases, even if it means more false alarms. Test the model separately for different age groups and genders to ensure fair performance across populations. Consider adding more recent data or lab test results to improve accuracy.
