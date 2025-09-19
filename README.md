@@ -57,6 +57,17 @@ Diabetes affects millions globally and early detection can prevent serious compl
 
 **What This Means**: The model is excellent at correctly identifying healthy patients (98% specificity) but conservative in flagging diabetes cases, catching only 13% of actual diabetes patients. This creates a very reliable screening tool that minimizes false alarms but may miss some at-risk individuals. For healthcare screening, this trade-off reduces unnecessary follow-ups while maintaining high confidence in positive predictions.
 
+## Calibration Check
+
+To test model reliability, a calibration analysis was performed.
+
+- **Output Files:**
+  - CSV results: `results/calibration_results.csv`
+  - Plot: `results/plots/calibration_curve.png`
+
+**Interpretation:**
+If the curve follows the diagonal, the model's predicted probabilities are well-aligned with actual outcomes. In this project, the calibration curve shows that predictions are fairly reliable, though some probabilities tend to be conservative.
+
 ## Key Findings
 
 **Top Risk Factors**: General health status, high blood pressure, and BMI emerged as the strongest predictors of diabetes risk, accounting for over 50% of the model's decision-making power. Age and high cholesterol were also important but secondary factors.
