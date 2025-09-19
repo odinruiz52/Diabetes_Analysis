@@ -42,3 +42,17 @@ Diabetes affects millions globally and early detection can prevent serious compl
 - Tested on 20% holdout set (50k records)
 - Measured accuracy, precision, recall, and clinical metrics
 - Analyzed feature importance and model performance
+
+## Results Summary
+
+**Model Performance on Test Set (50,736 patients):**
+
+| Metric | Value |
+|--------|-------|
+| **ROC-AUC** | 0.818 |
+| **Precision** | 0.609 |
+| **Recall (Sensitivity)** | 0.134 |
+| **Specificity** | 0.984 |
+| **F1-Score** | 0.219 |
+
+**What This Means**: The model is excellent at correctly identifying healthy patients (98% specificity) but conservative in flagging diabetes cases, catching only 13% of actual diabetes patients. This creates a very reliable screening tool that minimizes false alarms but may miss some at-risk individuals. For healthcare screening, this trade-off reduces unnecessary follow-ups while maintaining high confidence in positive predictions.
