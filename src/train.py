@@ -232,6 +232,60 @@ def fairness_check(y_test, y_pred, sensitive_features):
 
     return df_results
 
+def interpretability_check(model, X_test, feature_names):
+    """Generate SHAP values to explain feature impact on predictions."""
+    print("Running interpretability check with SHAP...")
+
+    import shap
+    import matplotlib.pyplot as plt
+
+    # Convert DataFrame to numpy array for SHAP
+    X_test_array = X_test.values if hasattr(X_test, 'values') else X_test
+
+    # Use a sample for faster SHAP computation (first 1000 samples)
+    sample_size = min(1000, len(X_test_array))
+    X_sample = X_test_array[:sample_size]
+    print(f"Using {sample_size} samples for SHAP analysis (faster computation)...")
+
+    # Create SHAP explainer
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(X_sample)
+
+    # Handle SHAP values based on output format
+    if isinstance(shap_values, list):
+        # List format - use positive class (class 1)
+        shap_values_positive = shap_values[1]
+    elif len(shap_values.shape) == 3:
+        # 3D array format - use positive class (last dimension index 1)
+        shap_values_positive = shap_values[:, :, 1]
+    else:
+        # 2D array format - single output
+        shap_values_positive = shap_values
+
+    # Convert to DataFrame
+    shap_df = pd.DataFrame(
+        shap_values_positive,
+        columns=feature_names
+    )
+    shap_summary = shap_df.abs().mean().sort_values(ascending=False).reset_index()
+    shap_summary.columns = ["Feature", "Mean_SHAP_Impact"]
+
+    os.makedirs("results", exist_ok=True)
+    shap_summary.to_csv("results/shap_summary.csv", index=False)
+
+    # Plot SHAP summary
+    os.makedirs("results/plots", exist_ok=True)
+    plt.figure()
+    shap.summary_plot(shap_values_positive, X_sample, feature_names=feature_names, show=False)
+    plt.savefig("results/plots/shap_summary.png", bbox_inches="tight")
+    plt.close()
+
+    print("Interpretability analysis complete!")
+    print("Results saved: results/shap_summary.csv and results/plots/shap_summary.png")
+    print("Key Insight: Features with higher SHAP impact values have stronger influence on model predictions.")
+
+    return shap_summary
+
 def create_visualizations(metrics):
     """Create and save key visualizations using visual.py"""
     print("Creating visualizations using visual.py...")
@@ -305,10 +359,13 @@ def main():
         y_test,
         metrics['predictions']['y_pred'],
         sensitive_features={
-            "Sex": X_test[:, feature_names.index("Sex")],
-            "Age": X_test[:, feature_names.index("Age")]
+            "Sex": X_test.iloc[:, feature_names.index("Sex")],
+            "Age": X_test.iloc[:, feature_names.index("Age")]
         }
     )
+
+    # Run interpretability check
+    interpretability_check(model, X_test, feature_names)
 
     # Create visualizations
     create_visualizations(metrics)
@@ -328,6 +385,8 @@ def main():
     print("  - Calibration results: results/calibration_results.csv")
     print("  - Calibration plot: results/plots/calibration_curve.png")
     print("  - Fairness results: results/fairness_check.csv")
+    print("  - SHAP interpretability: results/shap_summary.csv")
+    print("  - SHAP plot: results/plots/shap_summary.png")
 
 if __name__ == "__main__":
     main()

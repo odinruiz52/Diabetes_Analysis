@@ -81,6 +81,21 @@ To ensure the model performs consistently across groups, a basic demographic fai
 **Interpretation:**
 If large gaps exist between groups, it suggests the model favors one subgroup. Smaller gaps indicate fairer performance.
 
+## Interpretability (SHAP Analysis)
+
+To explain why the model makes predictions, SHAP (SHapley Additive exPlanations) was applied.
+
+- **Output Files:**
+  - CSV results: `results/shap_summary.csv`
+  - Plot: `results/plots/shap_summary.png`
+
+**What It Shows:**
+- Highlights the relative impact of each health factor on the model's predictions.
+- Positive SHAP values push predictions toward diabetes, while negative values push toward non-diabetes.
+
+**Interpretation:**
+This analysis helps recruiters and stakeholders see which health factors most strongly influence predictions, beyond just feature importance.
+
 ## Key Findings
 
 **Top Risk Factors**: General health status, high blood pressure, and BMI emerged as the strongest predictors of diabetes risk, accounting for over 50% of the model's decision-making power. Age and high cholesterol were also important but secondary factors.
