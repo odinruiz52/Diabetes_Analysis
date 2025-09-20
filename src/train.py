@@ -9,7 +9,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
     classification_report, confusion_matrix, roc_auc_score,
-    roc_curve, precision_recall_curve, average_precision_score
+    roc_curve, precision_recall_curve, average_precision_score,
+    accuracy_score, recall_score, f1_score
 )
 import joblib
 import os
@@ -80,6 +81,11 @@ def evaluate_model(model, X_test, y_test, feature_names):
     sensitivity = tp / (tp + fn)
     specificity = tn / (tn + fp)
     precision = tp / (tp + fp)
+
+    # Additional metrics for summary report
+    accuracy = accuracy_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
     
     # Feature importance
     feature_importance = pd.DataFrame({
@@ -93,6 +99,9 @@ def evaluate_model(model, X_test, y_test, feature_names):
         'sensitivity': sensitivity,
         'specificity': specificity,
         'precision': precision,
+        'accuracy': accuracy,
+        'recall': recall,
+        'f1': f1,
         'predictions': {
             'y_test': y_test,
             'y_pred': y_pred,
@@ -286,6 +295,51 @@ def interpretability_check(model, X_test, feature_names):
 
     return shap_summary
 
+def generate_summary_report(metrics, feature_names):
+    """Generate recruiter-facing summary report as Markdown file."""
+    print("Generating recruiter-facing summary report...")
+
+    report_path = "results/summary_report.md"
+    os.makedirs("results", exist_ok=True)
+
+    with open(report_path, "w") as f:
+        f.write("# Diabetes Prediction Model – Summary Report\n\n")
+
+        # Performance metrics
+        f.write("## Model Performance\n")
+        f.write(f"- Accuracy: {metrics['accuracy']:.3f}\n")
+        f.write(f"- Precision: {metrics['precision']:.3f}\n")
+        f.write(f"- Recall (Sensitivity): {metrics['recall']:.3f}\n")
+        f.write(f"- Specificity: {metrics['specificity']:.3f}\n")
+        f.write(f"- F1-Score: {metrics['f1']:.3f}\n")
+        f.write(f"- AUC: {metrics['roc_auc']:.3f}\n\n")
+
+        # Threshold analysis
+        f.write("## Threshold Analysis\n")
+        f.write("See `results/threshold_analysis.csv` for detailed trade-offs.\n")
+        f.write("Lower thresholds catch more cases (higher recall), while higher thresholds reduce false alarms (higher precision).\n\n")
+
+        # Calibration
+        f.write("## Calibration Check\n")
+        f.write("See `results/calibration_results.csv` and `results/plots/calibration_curve.png`.\n")
+        f.write("If the curve is close to the diagonal, predicted probabilities are reliable.\n\n")
+
+        # Fairness
+        f.write("## Fairness Check\n")
+        f.write("See `results/fairness_check.csv`.\n")
+        f.write("Shows performance across sex and age groups to detect disparities.\n\n")
+
+        # SHAP Interpretability
+        f.write("## Interpretability (SHAP Analysis)\n")
+        f.write("See `results/shap_summary.csv` and `results/plots/shap_summary.png`.\n")
+        f.write("Highlights the health factors that most influence predictions.\n")
+        f.write("For example: General Health, High Blood Pressure, and BMI are top drivers.\n\n")
+
+        f.write("---\n")
+        f.write("**End of Report – All outputs saved in the `results/` folder.**\n")
+
+    print(f"Summary report generated at {report_path}")
+
 def create_visualizations(metrics):
     """Create and save key visualizations using visual.py"""
     print("Creating visualizations using visual.py...")
@@ -367,6 +421,9 @@ def main():
     # Run interpretability check
     interpretability_check(model, X_test, feature_names)
 
+    # Generate summary report
+    generate_summary_report(metrics, feature_names)
+
     # Create visualizations
     create_visualizations(metrics)
     
@@ -387,6 +444,7 @@ def main():
     print("  - Fairness results: results/fairness_check.csv")
     print("  - SHAP interpretability: results/shap_summary.csv")
     print("  - SHAP plot: results/plots/shap_summary.png")
+    print("  - Summary report: results/summary_report.md")
 
 if __name__ == "__main__":
     main()

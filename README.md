@@ -96,6 +96,15 @@ To explain why the model makes predictions, SHAP (SHapley Additive exPlanations)
 **Interpretation:**
 This analysis helps recruiters and stakeholders see which health factors most strongly influence predictions, beyond just feature importance.
 
+## Final Recruiter Report
+
+A single markdown file is generated to make review simple:
+
+- **Summary Report (`results/summary_report.md`)**
+  - Combines all results into one document
+  - Includes performance metrics, threshold trade-offs, calibration check, fairness analysis, and SHAP interpretability
+  - Written in plain English for recruiters and stakeholders
+
 ## Key Findings
 
 **Top Risk Factors**: General health status, high blood pressure, and BMI emerged as the strongest predictors of diabetes risk, accounting for over 50% of the model's decision-making power. Age and high cholesterol were also important but secondary factors.
