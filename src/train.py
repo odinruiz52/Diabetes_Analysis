@@ -192,6 +192,46 @@ def calibration_check(y_test, y_pred_proba):
 
     return calib_df
 
+def fairness_check(y_test, y_pred, sensitive_features):
+    """Check model fairness by comparing performance across groups (e.g., Sex, Age)."""
+    print("Running demographic fairness check...")
+
+    from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+
+    results = []
+    for feature_name, feature_values in sensitive_features.items():
+        print(f"\nAnalyzing fairness for {feature_name}...")
+
+        for group in np.unique(feature_values):
+            mask = feature_values == group
+            y_true_group = y_test[mask]
+            y_pred_group = y_pred[mask]
+
+            precision = precision_score(y_true_group, y_pred_group, zero_division=0)
+            recall = recall_score(y_true_group, y_pred_group, zero_division=0)
+            f1 = f1_score(y_true_group, y_pred_group, zero_division=0)
+            acc = accuracy_score(y_true_group, y_pred_group)
+
+            results.append({
+                "Feature": feature_name,
+                "Group": str(group),
+                "Precision": round(precision, 3),
+                "Recall": round(recall, 3),
+                "F1": round(f1, 3),
+                "Accuracy": round(acc, 3)
+            })
+
+            print(f"  Group {group}: Precision={precision:.2f}, Recall={recall:.2f}, F1={f1:.2f}, Accuracy={acc:.2f}")
+
+    df_results = pd.DataFrame(results)
+    os.makedirs("results", exist_ok=True)
+    df_results.to_csv("results/fairness_check.csv", index=False)
+
+    print("\nFairness check complete! Results saved: results/fairness_check.csv")
+    print("Interpretation: Look for big gaps between groups. Smaller gaps mean fairer performance.")
+
+    return df_results
+
 def create_visualizations(metrics):
     """Create and save key visualizations using visual.py"""
     print("Creating visualizations using visual.py...")
@@ -260,6 +300,16 @@ def main():
     # Run calibration check
     calibration_check(y_test, metrics['predictions']['y_pred_proba'])
 
+    # Run fairness check
+    fairness_check(
+        y_test,
+        metrics['predictions']['y_pred'],
+        sensitive_features={
+            "Sex": X_test[:, feature_names.index("Sex")],
+            "Age": X_test[:, feature_names.index("Age")]
+        }
+    )
+
     # Create visualizations
     create_visualizations(metrics)
     
@@ -277,6 +327,7 @@ def main():
     print("  - Threshold analysis: results/threshold_analysis.csv")
     print("  - Calibration results: results/calibration_results.csv")
     print("  - Calibration plot: results/plots/calibration_curve.png")
+    print("  - Fairness results: results/fairness_check.csv")
 
 if __name__ == "__main__":
     main()

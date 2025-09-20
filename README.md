@@ -68,6 +68,19 @@ To test model reliability, a calibration analysis was performed.
 **Interpretation:**
 If the curve follows the diagonal, the model's predicted probabilities are well-aligned with actual outcomes. In this project, the calibration curve shows that predictions are fairly reliable, though some probabilities tend to be conservative.
 
+## Fairness Check
+
+To ensure the model performs consistently across groups, a basic demographic fairness check was added.
+
+- **Output File:** `results/fairness_check.csv`
+
+**What It Shows:**
+- Compares precision, recall, and F1-score across subgroups (e.g., Male vs Female, Age groups).
+- Helps identify whether one group is being predicted less accurately.
+
+**Interpretation:**
+If large gaps exist between groups, it suggests the model favors one subgroup. Smaller gaps indicate fairer performance.
+
 ## Key Findings
 
 **Top Risk Factors**: General health status, high blood pressure, and BMI emerged as the strongest predictors of diabetes risk, accounting for over 50% of the model's decision-making power. Age and high cholesterol were also important but secondary factors.
