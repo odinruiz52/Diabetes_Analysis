@@ -21,6 +21,17 @@ Diabetes affects millions globally and early detection can prevent serious compl
 - **Income**: Household income levels (8 brackets)
 - **Mental/Physical Health**: Days of poor health in past month
 
+## Exploratory Data Analysis (EDA)
+
+![Age Distribution](results/plots/age_diabetes_distribution.png)
+*Shows the distribution of patient ages in the dataset.*
+
+![Physical Activity vs Diabetes](results/plots/physical_activity_diabetes.png)
+*Compares diabetes prevalence across physically active vs inactive groups.*
+
+![Nutrition Composite Analysis](results/plots/nutrition_composite_analysis.png)
+*Highlights fruit and vegetable consumption patterns and their relationship to diabetes outcomes.*
+
 ## Methodology
 
 **Step 1: Data Exploration**
@@ -56,6 +67,17 @@ Diabetes affects millions globally and early detection can prevent serious compl
 | **F1-Score** | 0.219 |
 
 **What This Means**: The model is excellent at correctly identifying healthy patients (98% specificity) but conservative in flagging diabetes cases, catching only 13% of actual diabetes patients. This creates a very reliable screening tool that minimizes false alarms but may miss some at-risk individuals. For healthcare screening, this trade-off reduces unnecessary follow-ups while maintaining high confidence in positive predictions.
+
+## Model Performance
+
+![ROC Curve](results/plots/roc_curve.png)
+*Shows how well the model distinguishes between diabetic and non-diabetic patients. The curve demonstrates strong performance with an AUC of 0.818.*
+
+![Confusion Matrix](results/plots/confusion_matrix.png)
+*Breaks down correct vs incorrect predictions, highlighting the model's high specificity (few false alarms) but lower recall (missing some cases).*
+
+![Calibration Curve](results/plots/calibration_curve.png)
+*Verifies that predicted probabilities are compared to actual outcomes.*
 
 ## Calibration Check
 
@@ -95,6 +117,14 @@ To explain why the model makes predictions, SHAP (SHapley Additive exPlanations)
 
 **Interpretation:**
 This analysis helps recruiters and stakeholders see which health factors most strongly influence predictions, beyond just feature importance.
+
+## Interpretability & Key Findings
+
+![Feature Importance](results/plots/feature_importance.png)
+*Highlights the strongest drivers of diabetes predictions such as general health, blood pressure, and BMI.*
+
+![SHAP Summary Plot](results/plots/shap_summary.png)
+*Provides deeper explanations of how each health factor pushes predictions toward or away from diabetes.*
 
 ## Final Recruiter Report
 
