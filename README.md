@@ -21,18 +21,12 @@ Diabetes affects millions globally and early detection can prevent serious compl
 - **Income**: Household income levels (8 brackets)
 - **Mental/Physical Health**: Days of poor health in past month
 
-![Age Distribution Analysis](results/plots/age_diabetes_distribution.png)
-*Age distribution across diabetes status - showing clear patterns of increased diabetes prevalence with age*
-
 ## Methodology
 
 **Step 1: Data Exploration**
 - Analyzed 253k health records for patterns and relationships
 - Visualized diabetes prevalence across age, income, and lifestyle factors
 - Identified key risk factor associations
-
-![Physical Activity vs Diabetes](results/plots/physical_activity_diabetes.png)
-*Physical activity analysis showing clear differences in diabetes outcomes between active and non-active individuals*
 
 **Step 2: Data Preparation**
 - Cleaned and validated health survey data
@@ -62,9 +56,6 @@ Diabetes affects millions globally and early detection can prevent serious compl
 | **F1-Score** | 0.219 |
 
 **What This Means**: The model is excellent at correctly identifying healthy patients (98% specificity) but conservative in flagging diabetes cases, catching only 13% of actual diabetes patients. This creates a very reliable screening tool that minimizes false alarms but may miss some at-risk individuals. For healthcare screening, this trade-off reduces unnecessary follow-ups while maintaining high confidence in positive predictions.
-
-![Model Performance Overview](results/plots/performance_summary.png)
-*Model performance dashboard showing all key metrics at a glance*
 
 ## Calibration Check
 
@@ -118,15 +109,9 @@ A single markdown file is generated to make review simple:
 
 **Top Risk Factors**: General health status, high blood pressure, and BMI emerged as the strongest predictors of diabetes risk, accounting for over 50% of the model's decision-making power. Age and high cholesterol were also important but secondary factors.
 
-![Feature Importance](results/plots/feature_importance.png)
-*Top drivers of diabetes predictions showing which health factors influence the model most*
-
 **Model Strength**: The 98% specificity means the model rarely flags healthy people as diabetic, making it excellent for reducing false alarms in screening programs. When the model says someone is at risk, there's a 61% chance they actually have diabetes.
 
 **Population Insights**: The data revealed clear patterns linking lifestyle factors (physical activity, diet) and socioeconomic status (income level) to diabetes outcomes, confirming that diabetes risk extends beyond just medical factors.
-
-![Nutrition Composite Analysis](results/plots/nutrition_composite_analysis.png)
-*Comprehensive analysis showing relationships between nutrition, income, physical health, and diabetes across the population*
 
 ## Limitations & Next Steps
 
