@@ -77,6 +77,7 @@ Diabetes affects millions globally and early detection can prevent serious compl
 *Breaks down correct vs incorrect predictions, highlighting the model's high specificity (few false alarms) but lower recall (missing some cases).*
 
 ![Calibration Curve](results/plots/calibration_curve.png)
+
 *Verifies that predicted probabilities are compared to actual outcomes.*
 
 ## Calibration Check
